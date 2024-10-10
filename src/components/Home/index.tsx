@@ -4,6 +4,17 @@ import React, { useState, useEffect } from 'react';
 import NewGameButton from '../NewGameBtn';
 import Card from '../Card';
 
+const generateDeck = () => {
+  const cards: string[] = [
+    "/guitar.svg",
+    "/cow.svg",
+    "/pineapple.svg",
+    "/car.svg",
+    "/flower.svg",
+    "/cabin.svg",
+  ];
+  return [...cards, ...cards]; 
+};
 interface CardType {
   id: number;
   image: string;
@@ -12,24 +23,39 @@ interface CardType {
 }
 
 const Home: React.FC = () => {
-  const initialCards: CardType[] = Array.from({ length: 12 }, (_, index) => ({
+  const initialCards: CardType[] = generateDeck().map((image, index) => ({
     id: index,
-    image: `/image${Math.floor(index / 2) + 1}.svg`,
+    image: image,
     isFlipped: false,
     isMatched: false,
   }));
 
   const [cards, setCards] = useState<CardType[]>(shuffleCards(initialCards));
   const [moves, setMoves] = useState<number>(0);
-  const [highscore, setHighscore] = useState<number>(() => {
-    const storedHighscore = localStorage.getItem('highscore');
-    return storedHighscore ? Number(storedHighscore) : Infinity;
-  });
+  const [highscore, setHighscore] = useState<number>(Infinity);
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedHighscore = localStorage.getItem('highscore');
+      if (storedHighscore) {
+        setHighscore(Number(storedHighscore));
+      }
+    }
+  }, []);
 
   function shuffleCards(cards: CardType[]): CardType[] {
     return [...cards].sort(() => Math.random() - 0.5);
   }
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedHighscore = localStorage.getItem('highscore');
+      if (storedHighscore) {
+        setHighscore(Number(storedHighscore));
+      }
+    }
+  }, []);
 
   const handleCardClick = (index: number) => {
     if (flippedCards.length === 2 || cards[index].isFlipped || cards[index].isMatched) {
