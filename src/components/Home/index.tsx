@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import NewGameButton from '../NewGameBtn';
 import Card from '../Card';
 
-
 const generateDeck = () => {
   const cards: string[] = [
     "/guitar.svg",
@@ -16,7 +15,6 @@ const generateDeck = () => {
   ];
   return [...cards, ...cards];
 };
-
 interface CardType {
   id: number;
   image: string;
@@ -25,7 +23,6 @@ interface CardType {
 }
 
 const Home: React.FC = () => {
-
   const initialCards: CardType[] = generateDeck().map((image, index) => ({
     id: index,
     image: image,
@@ -35,11 +32,16 @@ const Home: React.FC = () => {
 
   const [cards, setCards] = useState<CardType[]>(shuffleCards(initialCards));
   const [moves, setMoves] = useState<number>(0);
-  const [highscore, setHighscore] = useState<number>(() => {
-    const storedHighscore = localStorage.getItem('highscore');
-    return storedHighscore ? Number(storedHighscore) : Infinity;
-  });
+  const [highscore, setHighscore] = useState<number | null>(null);
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
+
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedHighscore = localStorage.getItem('highscore');
+      setHighscore(storedHighscore ? Number(storedHighscore) : Infinity);
+    }
+  }, []);
 
   function shuffleCards(cards: CardType[]): CardType[] {
     return [...cards].sort(() => Math.random() - 0.5);
@@ -89,9 +91,11 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     if (cards.every((card) => card.isMatched)) {
-      if (moves < highscore) {
+      if (moves < highscore!) {
         setHighscore(moves);
-        localStorage.setItem('highscore', moves.toString());
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('highscore', moves.toString());
+        }
       }
     }
   }, [cards, moves, highscore]);
@@ -99,13 +103,13 @@ const Home: React.FC = () => {
   return (
     <div className="text-center p-6">
       <h2 data-testid="moves" className="text-2xl font-semibold">Moves: {moves}</h2>
-      <h3 data-testid="highscore" className="text-xl mt-2">Highscore: {highscore === Infinity ? "N/A" : highscore}</h3>
+      <h3 data-testid="highscore" className="text-xl mt-2">Highscore: {highscore === Infinity ? 'N/A' : highscore}</h3>
       <div className="grid grid-cols-4 gap-5 mt-8">
         {cards.map((card, index) => (
           <Card key={card.id} flipped={card.isFlipped} matched={card.isMatched} imageSrc={card.image} onClick={() => handleCardClick(index)} />
         ))}
       </div>
-      
+
       <NewGameButton newRound={handleNewGame} data-testid="new-game-btn" />
     </div>
   );
