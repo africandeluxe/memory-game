@@ -113,15 +113,6 @@ const Home: React.FC = () => {
     setHighscoreName(name);
   };
 
-  const handleResetHighscore = () => {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('highscore');
-      localStorage.removeItem('name');
-    }
-    setHighscore(Infinity);
-    setHighscoreName('N/A');
-  };
-  
   return (
     <div className="text-center p-4 md:p-6">
       <h2 data-testid="moves" className="text-lg md:text-2xl font-semibold">Moves: {moves}</h2>
@@ -134,12 +125,7 @@ const Home: React.FC = () => {
         </div>
       </div>
 
-      <div className="mt-6 flex justify-center gap-4">
-        <NewGameButton newRound={handleNewGame} data-testid="new-game-btn" />
-        <button onClick={handleResetHighscore} className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-all">
-          Reset Highscore
-        </button>
-      </div>
+      <NewGameButton newRound={handleNewGame} data-testid="new-game-btn" />
 
       {isNewHighscore && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
