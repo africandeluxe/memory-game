@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import NewGameButton from '../NewGameBtn';
 import Card from '../Card';
+import Highscore from '../Highscore';
 
 const generateDeck = () => {
   const cards: string[] = [
@@ -15,6 +16,7 @@ const generateDeck = () => {
   ];
   return [...cards, ...cards];
 };
+
 interface CardType {
   id: number;
   image: string;
@@ -34,7 +36,7 @@ const Home: React.FC = () => {
   const [moves, setMoves] = useState<number>(0);
   const [highscore, setHighscore] = useState<number | null>(null);
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
-
+  const [isNewHighscore, setIsNewHighscore] = useState<boolean>(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -87,18 +89,25 @@ const Home: React.FC = () => {
     setCards(shuffleCards(initialCards));
     setMoves(0);
     setFlippedCards([]);
+    setIsNewHighscore(false);
   };
 
   useEffect(() => {
     if (cards.every((card) => card.isMatched)) {
       if (moves < highscore!) {
         setHighscore(moves);
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('highscore', moves.toString());
-        }
+        setIsNewHighscore(true);
       }
     }
   }, [cards, moves, highscore]);
+
+  const handleHighscoreSubmit = (name: string) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('highscore', moves.toString());
+      localStorage.setItem('name', name);
+    }
+    setIsNewHighscore(false);
+  };
 
   return (
     <div className="text-center p-6">
@@ -111,6 +120,10 @@ const Home: React.FC = () => {
       </div>
 
       <NewGameButton newRound={handleNewGame} data-testid="new-game-btn" />
+
+      {isNewHighscore && (
+        <Highscore updateNewHighscore={() => handleHighscoreSubmit('Anonymous')} />
+      )}
     </div>
   );
 };
