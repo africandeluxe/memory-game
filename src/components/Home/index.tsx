@@ -35,13 +35,16 @@ const Home: React.FC = () => {
   const [cards, setCards] = useState<CardType[]>(shuffleCards(initialCards));
   const [moves, setMoves] = useState<number>(0);
   const [highscore, setHighscore] = useState<number | null>(null);
+  const [highscoreName, setHighscoreName] = useState<string>('N/A');
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
   const [isNewHighscore, setIsNewHighscore] = useState<boolean>(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const storedHighscore = localStorage.getItem('highscore');
+      const storedName = localStorage.getItem('name');
       setHighscore(storedHighscore ? Number(storedHighscore) : Infinity);
+      setHighscoreName(storedName ? storedName : 'N/A');
     }
   }, []);
 
@@ -107,12 +110,13 @@ const Home: React.FC = () => {
       localStorage.setItem('name', name);
     }
     setIsNewHighscore(false);
+    setHighscoreName(name);
   };
 
   return (
     <div className="text-center p-4 md:p-6">
       <h2 data-testid="moves" className="text-lg md:text-2xl font-semibold">Moves: {moves}</h2>
-      <h3 data-testid="highscore" className="ext-md md:text-xl mt-2">Highscore: {highscore === Infinity ? 'N/A' : highscore}</h3>
+      <h3 data-testid="highscore" className="ext-md md:text-xl mt-2">Highscore: {highscore === Infinity ? 'N/A' : `${highscore} by ${highscoreName}`}</h3>
       <div className="flex justify-center mt-8">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mt-8">
          {cards.map((card, index) => (
