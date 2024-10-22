@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 interface HighscoreProps {
-  updateNewHighscore: () => void;
+  updateNewHighscore: (name: string) => void;
 }
 
 const Highscore: React.FC<HighscoreProps> = ({ updateNewHighscore }) => {
@@ -12,8 +12,9 @@ const Highscore: React.FC<HighscoreProps> = ({ updateNewHighscore }) => {
   };
 
   const handleSave = () => {
-    localStorage.setItem('name', name);
-    updateNewHighscore();
+    if (name.trim() !== '') {
+      updateNewHighscore(name);
+    }
   };
 
   return (
