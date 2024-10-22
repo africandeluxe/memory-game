@@ -113,10 +113,12 @@ const Home: React.FC = () => {
     <div className="text-center p-4 md:p-6">
       <h2 data-testid="moves" className="text-lg md:text-2xl font-semibold">Moves: {moves}</h2>
       <h3 data-testid="highscore" className="ext-md md:text-xl mt-2">Highscore: {highscore === Infinity ? 'N/A' : highscore}</h3>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mt-8">
-        {cards.map((card, index) => (
-          <Card key={card.id} flipped={card.isFlipped} matched={card.isMatched} imageSrc={card.image} onClick={() => handleCardClick(index)} />
-        ))}
+      <div className="flex justify-center mt-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mt-8">
+         {cards.map((card, index) => (
+           <Card key={card.id} flipped={card.isFlipped} matched={card.isMatched} imageSrc={card.image} onClick={() => handleCardClick(index)} />
+         ))}
+        </div>
       </div>
 
       <NewGameButton newRound={handleNewGame} data-testid="new-game-btn" />
