@@ -10,7 +10,7 @@ interface CardProps {
 }
 
 const Card: React.FC<CardProps> = ({ flipped, matched, imageSrc, onClick }) => {
-git  return (
+ return (
     <div className={`w-24 h-36 flex items-center justify-center rounded-lg shadow-md cursor-pointer transition-all ${flipped || matched ? 'bg-transparent' : 'bg-[#ADD8E6]'}`} 
         onClick={onClick} data-testid="card">
       {flipped || matched ? (
